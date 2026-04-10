@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finalis Core — Finalized-State BFT Blockchain</title>
-    <meta name="description" content="Finalis Core is a finalized-state BFT blockchain where validator lifecycle, committee formation, and checkpoint derivation are all derived deterministically from finalized history.">
+    <title>Finalis Core — Run a Mainnet Node | Deterministic Finality BFT Blockchain</title>
+    <meta name="description" content="Run a Finalis Core mainnet node. Be part of the first reorg-proof L1 with deterministic finality. Join the genesis era.">
     
     <!-- Open Graph / Social Media -->
-    <meta property="og:title" content="Finalis Core">
-    <meta property="og:description" content="Deterministic finalized-state BFT blockchain">
+    <meta property="og:title" content="Finalis Core — Run a Mainnet Node">
+    <meta property="og:description" content="Deterministic finalized-state BFT blockchain. No forks. Mainnet live. Run the node.">
     <meta property="og:image" content="og-image.png">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
@@ -28,7 +28,6 @@
             padding: 2rem;
         }
 
-        /* Dark mode support */
         @media (prefers-color-scheme: dark) {
             body {
                 background: #1a1a1a;
@@ -54,16 +53,15 @@
             margin: 0 auto;
         }
 
-        /* Header with logo */
         .header-main {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             border-bottom: 2px solid #d4d4ce;
-            padding-bottom: 1.5rem;
+            padding-bottom: 1rem;
         }
 
         .logo-area {
@@ -82,7 +80,6 @@
             width: auto;
         }
 
-        /* Dark mode logo switching */
         @media (prefers-color-scheme: light) {
             .logo-horizontal-dark {
                 display: none;
@@ -91,28 +88,6 @@
         @media (prefers-color-scheme: dark) {
             .logo-horizontal-light {
                 display: none;
-            }
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #1a472a, #2d6a4f);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        .tagline {
-            font-size: 1.2rem;
-            color: #4a4a4a;
-            margin-top: 0.5rem;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .tagline {
-                color: #b0b0b0;
             }
         }
 
@@ -125,6 +100,87 @@
             font-size: 0.75rem;
             font-weight: 600;
             margin-right: 0.5rem;
+        }
+
+        .hero {
+            text-align: center;
+            margin: 2rem 0 1.5rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1a472a, #2d6a4f);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #4a4a4a;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .hero p {
+                color: #b0b0b0;
+            }
+        }
+
+        .button {
+            display: inline-block;
+            background: #2d6a4f;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-right: 0.75rem;
+            margin-top: 0.5rem;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .button:hover {
+            background: #1e593f;
+            text-decoration: none;
+        }
+
+        .button-outline {
+            background: transparent;
+            border: 1px solid #2d6a4f;
+            color: #2d6a4f;
+        }
+
+        .button-outline:hover {
+            background: #2d6a4f10;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .button-outline {
+                color: #4a9e6f;
+                border-color: #4a9e6f;
+            }
+            .button-outline:hover {
+                background: #4a9e6f20;
+            }
+        }
+
+        .incentive-banner {
+            background: #2d6a4f;
+            color: white;
+            text-align: center;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin: 1rem 0 1.5rem 0;
+            font-weight: 500;
+        }
+
+        .incentive-banner a {
+            color: white;
+            text-decoration: underline;
         }
 
         .grid {
@@ -168,15 +224,20 @@
             }
         }
 
-        .card p {
+        .card p, .card li {
             color: #4a4a4a;
             font-size: 0.9rem;
         }
 
         @media (prefers-color-scheme: dark) {
-            .card p {
+            .card p, .card li {
                 color: #c0c0c0;
             }
+        }
+
+        .card ul {
+            margin-left: 1.2rem;
+            margin-top: 0.5rem;
         }
 
         .code-block {
@@ -194,13 +255,14 @@
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
-            margin: 1.5rem 0;
+            margin: 1rem 0;
+            justify-content: center;
         }
 
         .stat {
             background: #e9e9e4;
             border-radius: 8px;
-            padding: 0.75rem 1.25rem;
+            padding: 0.5rem 1rem;
             font-size: 0.85rem;
         }
 
@@ -229,13 +291,6 @@
             color: #6a6a6a;
         }
 
-        @media (prefers-color-scheme: dark) {
-            footer {
-                border-top-color: #3a3a3a;
-                color: #8a8a8a;
-            }
-        }
-
         a {
             color: #2d6a4f;
             text-decoration: none;
@@ -245,59 +300,27 @@
             text-decoration: underline;
         }
 
-        @media (prefers-color-scheme: dark) {
-            a {
-                color: #4a9e6f;
-            }
-        }
-
-        .button {
-            display: inline-block;
-            background: #2d6a4f;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-right: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .button-outline {
-            background: transparent;
-            border: 1px solid #2d6a4f;
-            color: #2d6a4f;
-        }
-
         hr {
             border: none;
             border-top: 1px solid #e0e0db;
             margin: 1rem 0;
         }
 
-        @media (prefers-color-scheme: dark) {
-            hr {
-                border-top-color: #3a3a3a;
-            }
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
         }
 
-        .social-preview {
-            background: #e9e9e4;
-            border-radius: 12px;
-            padding: 1rem;
-            margin: 1rem 0;
-            text-align: center;
+        .discord-btn {
+            background: #5865F2;
         }
-
-        .social-preview img {
-            max-width: 100%;
-            border-radius: 8px;
+        .twitter-btn {
+            background: #1DA1F2;
         }
-
-        @media (prefers-color-scheme: dark) {
-            .social-preview {
-                background: #2a2a2a;
-            }
+        .github-btn {
+            background: #333;
         }
     </style>
 </head>
@@ -306,26 +329,34 @@
         <!-- Header with logo -->
         <div class="header-main">
             <div class="logo-area">
-                <img src="symbol-light.png" alt="Finalis Symbol" class="logo-symbol">
-                <img src="logo-horizontal-light.png" alt="Finalis" class="logo-horizontal logo-horizontal-light">
-                <img src="logo-horizontal-dark.png" alt="Finalis" class="logo-horizontal logo-horizontal-dark">
+                <!-- Placeholder images – replace with actual files or remove img tags -->
+                <img src="symbol-light.png" alt="Finalis Symbol" class="logo-symbol" onerror="this.style.display='none'">
+                <img src="logo-horizontal-light.png" alt="Finalis" class="logo-horizontal logo-horizontal-light" onerror="this.style.display='none'">
+                <img src="logo-horizontal-dark.png" alt="Finalis" class="logo-horizontal logo-horizontal-dark" onerror="this.style.display='none'">
+                <span style="font-weight: bold; font-size: 1.5rem;">FINALIS</span>
             </div>
             <div>
                 <span class="badge">v0.1.0</span>
                 <span class="badge" style="background: #5a4a2d;">BFT</span>
+                <span class="badge" style="background: #1a472a;">MAINNET LIVE</span>
             </div>
         </div>
 
-        <div class="tagline">
-            Finalized-state BFT blockchain — deterministic, no fork choice, derived entirely from finalized history.
+        <!-- Hero CTA section -->
+        <div class="hero">
+            <h1>Run a Finalis Mainnet Node</h1>
+            <p>Deterministic finality. No forks. Mainnet is live. Join the genesis era.</p>
+            <a href="#quick-start" class="button">🚀 Start Your Node →</a>
+            <a href="https://discord.gg/finalis" class="button button-outline" style="background:#5865F2; border:none; color:white;">💬 Join Discord</a>
         </div>
 
-        <!-- OG Image preview (optional, can remove if not needed) -->
-        <div class="social-preview" style="display: none;">
-            <img src="og-image.png" alt="Finalis Core Preview" style="max-height: 200px; width: auto;">
-            <p style="font-size: 0.75rem; margin-top: 0.5rem;">Open Graph preview image</p>
+        <!-- Incentive banner - mainnet rewards -->
+        <div class="incentive-banner">
+            🏆 Mainnet Rewards: Run a validator node and earn block rewards. Be an early mainnet participant.
+            <a href="#quick-start">Get started →</a>
         </div>
 
+        <!-- Stats bar -->
         <div class="stats">
             <div class="stat"><strong>Language:</strong> C++ 81%</div>
             <div class="stat"><strong>License:</strong> MIT</div>
@@ -333,7 +364,17 @@
             <div class="stat"><strong>Supply Cap:</strong> 7,000,000 FLS</div>
         </div>
 
+        <!-- Why run a node? + Key features grid -->
         <div class="grid">
+            <div class="card">
+                <h3>🏆 Why Run a Mainnet Node?</h3>
+                <ul>
+                    <li>Earn block rewards in FLS</li>
+                    <li>Help secure the first deterministic-finality L1</li>
+                    <li>Be a genesis-era validator</li>
+                    <li>Participate in BFT consensus from day one</li>
+                </ul>
+            </div>
             <div class="card">
                 <h3>⚡ Deterministic Finality</h3>
                 <p>No fork choice. No live longest-chain rule. The node processes only <code>height = finalized_height + 1</code>. Every block is final.</p>
@@ -342,6 +383,9 @@
                 <h3>🔄 Adaptive Committee</h3>
                 <p>Validator committee size, min bond, and eligibility thresholds adjust deterministically based on qualified operator depth.</p>
             </div>
+        </div>
+
+        <div class="grid">
             <div class="card">
                 <h3>📦 UTXO Ledger</h3>
                 <p>Simple, auditable UTXO model with P2PKH addresses. Ed25519 signatures. Deterministic reward settlement.</p>
@@ -350,17 +394,23 @@
                 <h3>📡 Light Client Support</h3>
                 <p>JSON-RPC lightserver exposes finalized-state queries. REST explorer and desktop wallet included.</p>
             </div>
+            <div class="card">
+                <h3>🔐 Address Format</h3>
+                <p>Ed25519 keys → HASH160(pubkey) → Bech32 encoding. HRP: <code>sc</code> (mainnet) / <code>tsc</code> (testnet).</p>
+            </div>
         </div>
 
-        <div class="card">
-            <h3>🚀 Quick Start</h3>
+        <!-- Quick Start (corrected commands) -->
+        <div class="card" id="quick-start">
+            <h3>🚀 Quick Start (5 minutes)</h3>
             <div class="code-block">
                 # Clone and build<br>
                 git clone https://github.com/finalis-core/finalis-core<br>
                 cd finalis-core<br>
-                cmake -S . -B build -G Ninja<br>
-                cmake --build build -j<br><br>
-                ./scripts/start.sh<br>
+                cmake -S . -B build -G Ninja &amp;&amp; cmake --build build -j<br><br>
+                # Run your mainnet node<br>
+                ./build/finalis-node --db ./node_data --network mainnet<br><br>
+                # Need help? Join our Discord (link below)
             </div>
             <p style="margin-top: 0.75rem; font-size: 0.85rem;">Default ports: P2P <code>19440</code> · Lightserver <code>19444</code></p>
         </div>
@@ -368,18 +418,24 @@
         <div class="grid">
             <div class="card">
                 <h3>📊 Economic Model</h3>
-                <p>12-year emission schedule with 20% annual decay. 10% reserve accrual during emission era. Zero new issuance after 7M cap. Post-cap fee pooling with reserve subsidy support.</p>
-            </div>
-            <div class="card">
-                <h3>🔐 Address Format</h3>
-                <p>Ed25519 keys → HASH160(pubkey) → Bech32 encoding. HRP: <code>sc</code> (mainnet) / <code>tsc</code> (testnet).</p>
+                <p>12-year emission schedule with 20% annual decay. 10% reserve accrual during emission era. Zero new issuance after 7M cap. Post-cap fee pooling with reserve subsidy support. Mainnet validators earn block rewards.</p>
             </div>
             <div class="card">
                 <h3>📁 Repository Components</h3>
                 <p><code>finalis-node</code> · <code>finalis-lightserver</code> · <code>finalis-explorer</code> · <code>finalis-wallet</code> · Formal TLA+ models · Attack simulations</p>
             </div>
+            <div class="card">
+                <h3>💬 Get Involved</h3>
+                <div class="social-buttons">
+                    <a href="https://discord.gg/finalis" class="button discord-btn" style="background:#5865F2;">Join Discord</a>
+                    <a href="https://twitter.com/finalis_core" class="button twitter-btn" style="background:#1DA1F2;">Follow on X</a>
+                    <a href="https://github.com/finalis-core/finalis-core" class="button github-btn" style="background:#333;">GitHub</a>
+                </div>
+                <p style="margin-top: 0.75rem;">Questions? Bugs? Reach out – we're building in public on mainnet.</p>
+            </div>
         </div>
 
+        <!-- Documentation & Resources -->
         <div class="card">
             <h3>📚 Key Documentation</h3>
             <p>
@@ -400,7 +456,8 @@
 
         <footer>
             finalis-core — deterministic finalized-state BFT blockchain<br>
-            Built with C++20, RocksDB, Ed25519, and Sparse Merkle Trees.
+            Built with C++20, RocksDB, Ed25519, and Sparse Merkle Trees.<br>
+            <span style="font-size: 0.75rem;">⚠️ Mainnet is experimental software – run at your own risk. Participate responsibly.</span>
         </footer>
     </div>
 </body>
