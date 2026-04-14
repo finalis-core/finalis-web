@@ -481,6 +481,101 @@
         </div>
     </div>
 
+    <div class="card">
+        <h3>🕶️ Confidential UTXO (In Progress)</h3>
+        <p>Finalis Core is adding a confidential UTXO extension to hide amounts and recipients while preserving finalized-state validity. This is under active development and currently supports a bounded subset of confidential transactions.</p>
+        <div class="code-block" style="background:#ffffff; color:#1a1a1a; border:1px solid #e0e0db; overflow-x:auto;">
+            <table style="width:100%; border-collapse: collapse; font-size: 0.85rem;">
+                <thead>
+                <tr>
+                    <th style="text-align:left; padding:6px; border-bottom:1px solid #e0e0db;">Feature</th>
+                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Bitcoin</th>
+                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Monero</th>
+                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Ethereum</th>
+                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Solana</th>
+                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Finalis (mainnet)</th>
+                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Finalis (confidential branch)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">BFT finality</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">No live fork choice runtime</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">UTXO model</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">Confidential-capable txs</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes (bounded subset)</td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">Transparent → Confidential</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">n/a</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">Confidential → Transparent</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">n/a</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">Full privacy protocol</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
+                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">not yet</td>
+                </tr>
+                <tr>
+                    <td style="padding:6px;">No trusted setup</td>
+                    <td style="text-align:center; padding:6px;">yes</td>
+                    <td style="text-align:center; padding:6px;">yes</td>
+                    <td style="text-align:center; padding:6px;">no</td>
+                    <td style="text-align:center; padding:6px;">n/a</td>
+                    <td style="text-align:center; padding:6px;">yes</td>
+                    <td style="text-align:center; padding:6px;">yes</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p><a href="https://github.com/finalis-core/finalis-core/blob/main/docs/spec/CONFIDENTIAL_UTXO_SPEC.md">Read the confidential UTXO spec</a></p>
+    </div>
+
     <div class="card" id="quick-start">
         <h3>🚀 Quick Start (Linux)</h3>
         <div class="code-block">
