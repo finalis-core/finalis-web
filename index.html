@@ -325,15 +325,161 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header with logo -->
-        <div class="header-main">
-            <div class="logo-area">
-                <!-- Placeholder images – replace with actual files or remove img tags -->
-                <!-- <img src="symbol-light.png" alt="Finalis Symbol" class="logo-symbol" onerror="this.style.display='none'"> -->
-                <img src="logo-horizontal-light.png" alt="Finalis" class="logo-horizontal logo-horizontal-light" onerror="this.style.display='none'">
-                <img src="logo-horizontal-dark.png" alt="Finalis" class="logo-horizontal logo-horizontal-dark" onerror="this.style.display='none'">
-                <span style="font-weight: bold; font-size: 1.5rem;">FINALIS</span>
+<div class="container">
+    <h1>🔷 Finalis Explorer</h1>
+    <div class="subtitle">JSON-RPC 2.0 Client • Lightserver Connection</div>
+
+    <div class="config-bar">
+        <label>Lightserver URL:</label>
+        <input type="text" id="serverUrl" placeholder="http://85.217.171.168:19444:19444/rpc" value="http://85.217.171.168:19444/rpc">
+        <button id="connectBtn">⟳ Connect</button>
+        <span id="statusBadge" class="status-badge status-offline">Offline</span>
+    </div>
+
+    <div id="content">
+        <div class="loading">🔌 Click Connect to connect to lightserver</div>
+    </div>
+    <div class="refresh-note">
+        ⚡ Using JSON-RPC 2.0 over POST to /rpc endpoint<br>
+        📡 Methods: get_status, get_utxos, get_history_page
+    </div>
+</div>
+
+<script>
+    let currentServerUrl = '';
+
+    // JSON-RPC 2.0 call
+    async function jsonRpcCall(serverUrl, method, params = {}) {
+        const requestBody = {
+            jsonrpc: "2.0",
+            method: method,
+            params: params,
+            id: Date.now()
+        };
+        
+        const response = await fetch(serverUrl, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(`[${data.error.code}] ${data.error.message}`);
+        }
+        return data.result;
+    }
+
+    // API Methods
+    async function getStatus(serverUrl) {
+        return await jsonRpcCall(serverUrl, 'get_status', {});
+    }
+
+    async function getUtxos(serverUrl, scripthashHex) {
+        return await jsonRpcCall(serverUrl, 'get_utxos', { scripthash_hex: scripthashHex });
+    }
+
+    async function getHistoryPage(serverUrl, scripthashHex, page = 0, limit = 10) {
+        return await jsonRpcCall(serverUrl, 'get_history_page', { 
+            scripthash_hex: scripthashHex, 
+            page: page, 
+            limit: limit 
+        });
+    }
+
+    // Format FLS amount (8 decimals)
+    function formatFlips(amount) {
+        if (!amount && amount !== 0) return 'N/A';
+        const fls = amount / 100000000;
+        return fls.toFixed(8) + ' FLS';
+    }
+
+    // Load dashboard
+    async function loadExplorer() {
+        let serverUrl = document.getElementById('serverUrl').value.trim();
+        if (!serverUrl) {
+            showError('Please enter a lightserver URL');
+            return;
+        }
+        
+        if (!serverUrl.startsWith('http')) {
+            serverUrl = 'http://' + serverUrl;
+        }
+        
+        // Ensure /rpc endpoint
+        if (!serverUrl.endsWith('/rpc')) {
+            serverUrl = serverUrl.replace(/\/$/, '') + '/rpc';
+        }
+        
+        currentServerUrl = serverUrl;
+        const statusBadge = document.getElementById('statusBadge');
+        statusBadge.textContent = '⏳ Connecting...';
+        statusBadge.className = 'status-badge status-offline';
+        
+        const contentDiv = document.getElementById('content');
+        contentDiv.innerHTML = '<div class="loading">🔄 Connecting to ' + serverUrl + '...</div>';
+        
+        try {
+            const status = await getStatus(serverUrl);
+            statusBadge.textContent = '● Online';
+            statusBadge.className = 'status-badge status-online';
+            
+            renderDashboard(status, serverUrl);
+        } catch (error) {
+            console.error('Connection error:', error);
+            statusBadge.textContent = 'Offline';
+            statusBadge.className = 'status-badge status-offline';
+            
+            let errorMsg = `
+                <strong>Failed to connect to ${serverUrl}</strong><br><br>
+                Error: ${error.message}<br><br>
+            `;
+            
+            if (error.message === 'Failed to fetch') {
+                errorMsg += `
+                    <strong>Troubleshooting:</strong><br>
+                    1. Make sure the lightserver is running: <code>./build/finalis-node --with-lightserver</code><br>
+                    2. Check if you can access from browser: <a href="${serverUrl}" target="_blank">${serverUrl}</a><br>
+                    3. Test with curl:<br>
+                       <code>curl -X POST ${serverUrl} -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1,"method":"get_status","params":{}}'</code><br>
+                    4. Check if CORS is blocking: The lightserver may need to add CORS headers
+                `;
+            }
+            
+            showError(errorMsg);
+        }
+    }
+    
+    function renderDashboard(status, serverUrl) {
+        const contentDiv = document.getElementById('content');
+        
+        const height = status?.finalized_height || status?.tip?.height || '?';
+        const network = status?.network_name || 'mainnet';
+        const version = status?.version || 'unknown';
+        const reserveBalance = status?.protocol_reserve_balance || 0;
+        const committeeSize = status?.latest_finality_committee_size || 0;
+        const peers = status?.peers || 0;
+        const mempoolSize = status?.mempool_size || 0;
+        const uptime = status?.uptime_s || 0;
+        
+        // Format uptime
+        const uptimeHours = Math.floor(uptime / 3600);
+        const uptimeMinutes = Math.floor((uptime % 3600) / 60);
+        const uptimeStr = `${uptimeHours}h ${uptimeMinutes}m`;
+        
+        contentDiv.innerHTML = `
+            <div class="success">
+                ✅ Connected to ${serverUrl}<br>
+                <small>Network: ${network} | Version: ${version} | Height: ${height}</small>
             </div>
             <div>
                 <span class="badge">v0.1.0</span>
