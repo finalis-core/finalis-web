@@ -259,6 +259,106 @@
             justify-content: center;
         }
 
+        .subtitle {
+            color: #6a6a6a;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .config-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0 1.5rem 0;
+        }
+
+        .config-bar label {
+            font-size: 0.85rem;
+            color: #4a4a4a;
+        }
+
+        .config-bar input {
+            width: min(520px, 100%);
+            padding: 0.6rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #d0d0ca;
+            background: white;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+        }
+
+        .config-bar button {
+            background: #2d6a4f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 0.9rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .config-bar button:hover {
+            background: #1e593f;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-online {
+            background: #e6f4ec;
+            color: #1a472a;
+            border: 1px solid #b7dfc6;
+        }
+
+        .status-offline {
+            background: #f6e7e7;
+            color: #7a1f1f;
+            border: 1px solid #e7b6b6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 1rem;
+            color: #4a4a4a;
+            font-size: 0.9rem;
+        }
+
+        .success {
+            background: #ecf5ef;
+            border: 1px solid #c5e1d0;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .error {
+            background: #fbeaea;
+            border: 1px solid #e2b8b8;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .refresh-note {
+            text-align: center;
+            color: #6a6a6a;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+
         .stat {
             background: #e9e9e4;
             border-radius: 8px;
@@ -326,285 +426,120 @@
 </head>
 <body>
 <div class="container">
-    <h1>🔷 Finalis Explorer</h1>
-    <div class="subtitle">JSON-RPC 2.0 Client • Lightserver Connection</div>
-
-    <div class="config-bar">
-        <label>Lightserver URL:</label>
-        <input type="text" id="serverUrl" placeholder="http://85.217.171.168:19444:19444/rpc" value="http://85.217.171.168:19444/rpc">
-        <button id="connectBtn">⟳ Connect</button>
-        <span id="statusBadge" class="status-badge status-offline">Offline</span>
+    <div class="hero">
+        <h1>Run a Finalis Mainnet Node</h1>
+        <p>Deterministic finality. No forks. Mainnet is live. Join the genesis era.</p>
+        <a href="#quick-start" class="button">🚀 Start Your Node →</a>
+        <a href="https://discord.gg/finalis" class="button button-outline" style="background:#5865F2; border:none; color:white;">💬 Join Discord</a>
+        <a href="https://github.com/finalis-core/finalis-core/releases/latest" class="button" style="background:#0865F2; border:none; color:white;">Download Finalis Core</a>
     </div>
 
-    <div id="content">
-        <div class="loading">🔌 Click Connect to connect to lightserver</div>
+    <div class="incentive-banner">
+        🏆 Mainnet Rewards: Run a validator node and earn block rewards. Be an early mainnet participant.
+        <a href="#quick-start">Get started →</a>
     </div>
-    <div class="refresh-note">
-        ⚡ Using JSON-RPC 2.0 over POST to /rpc endpoint<br>
-        📡 Methods: get_status, get_utxos, get_history_page
+
+    <div class="stats">
+        <div class="stat"><strong>Language:</strong> C++</div>
+        <div class="stat"><strong>License:</strong> MIT</div>
+        <div class="stat"><strong>Finality:</strong> BFT (⌊2N/3⌋+1)</div>
+        <div class="stat"><strong>Supply Cap:</strong> 7,000,000 FLS</div>
     </div>
-</div>
 
-<script>
-    let currentServerUrl = '';
-
-    // JSON-RPC 2.0 call
-    async function jsonRpcCall(serverUrl, method, params = {}) {
-        const requestBody = {
-            jsonrpc: "2.0",
-            method: method,
-            params: params,
-            id: Date.now()
-        };
-        
-        const response = await fetch(serverUrl, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data.error) {
-            throw new Error(`[${data.error.code}] ${data.error.message}`);
-        }
-        return data.result;
-    }
-
-    // API Methods
-    async function getStatus(serverUrl) {
-        return await jsonRpcCall(serverUrl, 'get_status', {});
-    }
-
-    async function getUtxos(serverUrl, scripthashHex) {
-        return await jsonRpcCall(serverUrl, 'get_utxos', { scripthash_hex: scripthashHex });
-    }
-
-    async function getHistoryPage(serverUrl, scripthashHex, page = 0, limit = 10) {
-        return await jsonRpcCall(serverUrl, 'get_history_page', { 
-            scripthash_hex: scripthashHex, 
-            page: page, 
-            limit: limit 
-        });
-    }
-
-    // Format FLS amount (8 decimals)
-    function formatFlips(amount) {
-        if (!amount && amount !== 0) return 'N/A';
-        const fls = amount / 100000000;
-        return fls.toFixed(8) + ' FLS';
-    }
-
-    // Load dashboard
-    async function loadExplorer() {
-        let serverUrl = document.getElementById('serverUrl').value.trim();
-        if (!serverUrl) {
-            showError('Please enter a lightserver URL');
-            return;
-        }
-        
-        if (!serverUrl.startsWith('http')) {
-            serverUrl = 'http://' + serverUrl;
-        }
-        
-        // Ensure /rpc endpoint
-        if (!serverUrl.endsWith('/rpc')) {
-            serverUrl = serverUrl.replace(/\/$/, '') + '/rpc';
-        }
-        
-        currentServerUrl = serverUrl;
-        const statusBadge = document.getElementById('statusBadge');
-        statusBadge.textContent = '⏳ Connecting...';
-        statusBadge.className = 'status-badge status-offline';
-        
-        const contentDiv = document.getElementById('content');
-        contentDiv.innerHTML = '<div class="loading">🔄 Connecting to ' + serverUrl + '...</div>';
-        
-        try {
-            const status = await getStatus(serverUrl);
-            statusBadge.textContent = '● Online';
-            statusBadge.className = 'status-badge status-online';
-            
-            renderDashboard(status, serverUrl);
-        } catch (error) {
-            console.error('Connection error:', error);
-            statusBadge.textContent = 'Offline';
-            statusBadge.className = 'status-badge status-offline';
-            
-            let errorMsg = `
-                <strong>Failed to connect to ${serverUrl}</strong><br><br>
-                Error: ${error.message}<br><br>
-            `;
-            
-            if (error.message === 'Failed to fetch') {
-                errorMsg += `
-                    <strong>Troubleshooting:</strong><br>
-                    1. Make sure the lightserver is running: <code>./build/finalis-node --with-lightserver</code><br>
-                    2. Check if you can access from browser: <a href="${serverUrl}" target="_blank">${serverUrl}</a><br>
-                    3. Test with curl:<br>
-                       <code>curl -X POST ${serverUrl} -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1,"method":"get_status","params":{}}'</code><br>
-                    4. Check if CORS is blocking: The lightserver may need to add CORS headers
-                `;
-            }
-            
-            showError(errorMsg);
-        }
-    }
-    
-    function renderDashboard(status, serverUrl) {
-        const contentDiv = document.getElementById('content');
-        
-        const height = status?.finalized_height || status?.tip?.height || '?';
-        const network = status?.network_name || 'mainnet';
-        const version = status?.version || 'unknown';
-        const reserveBalance = status?.protocol_reserve_balance || 0;
-        const committeeSize = status?.latest_finality_committee_size || 0;
-        const peers = status?.peers || 0;
-        const mempoolSize = status?.mempool_size || 0;
-        const uptime = status?.uptime_s || 0;
-        
-        // Format uptime
-        const uptimeHours = Math.floor(uptime / 3600);
-        const uptimeMinutes = Math.floor((uptime % 3600) / 60);
-        const uptimeStr = `${uptimeHours}h ${uptimeMinutes}m`;
-        
-        contentDiv.innerHTML = `
-            <div class="success">
-                ✅ Connected to ${serverUrl}<br>
-                <small>Network: ${network} | Version: ${version} | Height: ${height}</small>
-            </div>
-            <div>
-                <span class="badge">v0.1.0</span>
-                <span class="badge" style="background: #5a4a2d;">BFT</span>
-                <span class="badge" style="background: #1a472a;">MAINNET LIVE</span>
-            </div>
-        </div>
-
-        <!-- Hero CTA section -->
-        <div class="hero">
-            <h1>Run a Finalis Mainnet Node</h1>
-            <p>Deterministic finality. No forks. Mainnet is live. Join the genesis era.</p>
-            <a href="#quick-start" class="button">🚀 Start Your Node →</a>
-            <a href="https://discord.gg/finalis" class="button button-outline" style="background:#5865F2; border:none; color:white;">💬 Join Discord</a>
-            <a href="https://github.com/finalis-core/finalis-core/releases/tag/v0.7.1" style="background:#0865F2; border:none; color:white;">Download Finalis core v0.7.1</a>
-        </div>
-
-        <!-- Incentive banner - mainnet rewards -->
-        <div class="incentive-banner">
-            🏆 Mainnet Rewards: Run a validator node and earn block rewards. Be an early mainnet participant.
-            <a href="#quick-start">Get started →</a>
-        </div>
-
-        <!-- Stats bar -->
-        <div class="stats">
-            <div class="stat"><strong>Language:</strong> C++ 81%</div>
-            <div class="stat"><strong>License:</strong> MIT</div>
-            <div class="stat"><strong>Finality:</strong> BFT (⌊2N/3⌋+1)</div>
-            <div class="stat"><strong>Supply Cap:</strong> 7,000,000 FLS</div>
-        </div>
-
-        <!-- Why run a node? + Key features grid -->
-        <div class="grid">
-            <div class="card">
-                <h3>🏆 Why Run a Mainnet Node?</h3>
-                <ul>
-                    <li>Earn block rewards in FLS</li>
-                    <li>Help secure the first deterministic-finality L1</li>
-                    <li>Be a genesis-era validator</li>
-                    <li>Participate in BFT consensus from day one</li>
-                </ul>
-            </div>
-            <div class="card">
-                <h3>⚡ Deterministic Finality</h3>
-                <p>No fork choice. No live longest-chain rule. The node processes only <code>height = finalized_height + 1</code>. Every block is final.</p>
-            </div>
-            <div class="card">
-                <h3>🔄 Adaptive Committee</h3>
-                <p>Validator committee size, min bond, and eligibility thresholds adjust deterministically based on qualified operator depth.</p>
-            </div>
-        </div>
-
-        <div class="grid">
-            <div class="card">
-                <h3>📦 UTXO Ledger</h3>
-                <p>Simple, auditable UTXO model with P2PKH addresses. Ed25519 signatures. Deterministic reward settlement.</p>
-            </div>
-            <div class="card">
-                <h3>📡 Light Client Support</h3>
-                <p>JSON-RPC lightserver exposes finalized-state queries. REST explorer and desktop wallet included.</p>
-            </div>
-            <div class="card">
-                <h3>🔐 Address Format</h3>
-                <p>Ed25519 keys → HASH160(pubkey) → Bech32 encoding. HRP: <code>sc</code> (mainnet) / <code>tsc</code> (testnet).</p>
-            </div>
-        </div>
-
-        <!-- Quick Start (corrected commands) -->
-        <div class="card" id="quick-start">
-            <h3>🚀 Quick Start (5 minutes)</h3>
-            <div class="code-block">
-                # Clone and build<br>
-                git clone https://github.com/finalis-core/finalis-core<br>
-                cd finalis-core<br>
-                cmake -S . -B build -G Ninja &amp;&amp; cmake --build build -j<br><br>
-                # Run your mainnet node<br>
-                ./scripts/start.sh
-            </div>
-            <p style="margin-top: 0.75rem; font-size: 0.85rem;">Default ports: P2P <code>19440</code> · Lightserver <code>19444</code></p>
-        </div>
-
-        <div class="grid">
-            <div class="card">
-                <h3>📊 Economic Model</h3>
-                <p>12-year emission schedule with 20% annual decay. 10% reserve accrual during emission era. Zero new issuance after 7M cap. Post-cap fee pooling with reserve subsidy support. Mainnet validators earn block rewards.</p>
-            </div>
-            <div class="card">
-                <h3>📁 Repository Components</h3>
-                <p><code>finalis-node</code> · <code>finalis-lightserver</code> · <code>finalis-explorer</code> · <code>finalis-wallet</code> · Formal TLA+ models · Attack simulations</p>
-            </div>
-            <div class="card">
-                <h3>💬 Get Involved</h3>
-                <div class="social-buttons">
-                    <a href="https://discord.gg/ggTug2EN" class="button discord-btn" style="background:#5865F2;">Join Discord</a>
-                    <a href="https://x.com/finalis164513" class="button twitter-btn" style="background:#1DA1F2;">Follow on X</a>
-                    <a href="https://github.com/finalis-core/finalis-core" class="button github-btn" style="background:#333;">GitHub</a>
-                </div>
-                <p style="margin-top: 0.75rem;">Questions? Bugs? Reach out – we're building in public on mainnet.</p>
-            </div>
-        </div>
-
-        <!-- Documentation & Resources -->
+    <div class="grid">
         <div class="card">
-            <h3>📚 Key Documentation</h3>
-            <p>
-                <a href="#">Consensus Overview</a> · 
-                <a href="#">Live Protocol Spec</a> · 
-                <a href="#">Checkpoint Derivation</a> · 
-                <a href="#">Exchange Integration</a> · 
-                <a href="#">Address Format</a>
-            </p>
-            <hr>
-            <h3>🔗 Resources</h3>
-            <p>
-                <a href="https://github.com/finalis-core/finalis-core">GitHub Repository</a> · 
-                <a href="#">RPC Methods</a> · 
-                <a href="#">Build Guide</a>
-            </p>
+            <h3>🏆 Why Run a Mainnet Node?</h3>
+            <ul>
+                <li>Earn block rewards in FLS</li>
+                <li>Help secure deterministic-finality consensus</li>
+                <li>Be an early validator</li>
+                <li>Participate in BFT consensus from day one</li>
+            </ul>
         </div>
-
-        <footer>
-            finalis-core — deterministic finalized-state BFT blockchain<br>
-            Built with C++20, RocksDB, Ed25519, and Sparse Merkle Trees.<br>
-            <span style="font-size: 0.75rem;">⚠️ Mainnet is experimental software – run at your own risk. Participate responsibly.</span>
-        </footer>
+        <div class="card">
+            <h3>⚡ Deterministic Finality</h3>
+            <p>No fork choice. The node processes only <code>height = finalized_height + 1</code>. Every block is final.</p>
+        </div>
+        <div class="card">
+            <h3>🔄 Adaptive Committee</h3>
+            <p>Committee size, minimum bond, and eligibility thresholds adjust deterministically based on qualified operator depth.</p>
+        </div>
     </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>📦 UTXO Ledger</h3>
+            <p>Simple, auditable UTXO model with P2PKH addresses. Ed25519 signatures. Deterministic reward settlement.</p>
+        </div>
+        <div class="card">
+            <h3>📡 Light Client Support</h3>
+            <p>JSON-RPC lightserver exposes finalized-state queries. REST explorer and desktop wallet included.</p>
+        </div>
+        <div class="card">
+            <h3>🔐 Address Format</h3>
+            <p>Ed25519 keys → HASH160(pubkey) → Bech32 encoding. HRP: <code>sc</code> (mainnet) / <code>tsc</code> (testnet).</p>
+        </div>
+    </div>
+
+    <div class="card" id="quick-start">
+        <h3>🚀 Quick Start (Linux)</h3>
+        <div class="code-block">
+            # Clone and build<br>
+            git clone https://github.com/finalis-core/finalis-core<br>
+            cd finalis-core<br>
+            cmake -S . -B build -G Ninja &amp;&amp; cmake --build build -j<br><br>
+            # Run your mainnet node<br>
+            ./scripts/start.sh
+        </div>
+        <p style="margin-top: 0.75rem; font-size: 0.85rem;">Default ports: P2P <code>19440</code> · Lightserver <code>19444</code></p>
+        <hr>
+        <h3>🚀 Quick Start (Windows)</h3>
+        <p>Download the latest installer from <a href="https://github.com/finalis-core/finalis-core/releases">GitHub Releases</a>, install it, launch the node and lightserver, then verify identity with <code>get_status</code>.</p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>📊 Economic Model</h3>
+            <p>12-year emission schedule with 20% annual decay. 10% reserve accrual during emission era. Zero new issuance after 7M cap. Post-cap fee pooling with reserve subsidy support.</p>
+        </div>
+        <div class="card">
+            <h3>📁 Repository Components</h3>
+            <p><code>finalis-node</code> · <code>finalis-lightserver</code> · <code>finalis-explorer</code> · <code>finalis-wallet</code> · Formal TLA+ models · Attack simulations</p>
+        </div>
+        <div class="card">
+            <h3>💬 Get Involved</h3>
+            <div class="social-buttons">
+                <a href="https://discord.gg/ggTug2EN" class="button discord-btn" style="background:#5865F2;">Join Discord</a>
+                <a href="https://x.com/finalis164513" class="button twitter-btn" style="background:#1DA1F2;">Follow on X</a>
+                <a href="https://github.com/finalis-core/finalis-core" class="button github-btn" style="background:#333;">GitHub</a>
+            </div>
+            <p style="margin-top: 0.75rem;">Questions? Bugs? Reach out – we're building in public on mainnet.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📚 Key Documentation</h3>
+        <p>
+            <a href="https://github.com/finalis-core/finalis-core/blob/main/docs/CONSENSUS.md">Consensus Overview</a> · 
+            <a href="https://github.com/finalis-core/finalis-core/blob/main/docs/LIVE_PROTOCOL.md">Live Protocol Spec</a> · 
+            <a href="https://github.com/finalis-core/finalis-core/blob/main/docs/spec/CHECKPOINT_DERIVATION_SPEC.md">Checkpoint Derivation</a> · 
+            <a href="https://github.com/finalis-core/finalis-core/blob/main/docs/EXCHANGE_INTEGRATION.md">Exchange Integration</a> · 
+            <a href="https://github.com/finalis-core/finalis-core/blob/main/docs/ADDRESSES.md">Address Format</a>
+        </p>
+        <hr>
+        <h3>🔗 Resources</h3>
+        <p>
+            <a href="https://github.com/finalis-core/finalis-core">GitHub Repository</a> · 
+            <a href="https://github.com/finalis-core/finalis-core/blob/main/docs/MAINNET.md">RPC Methods</a> · 
+            <a href="https://github.com/finalis-core/finalis-core#run-a-node">Build Guide</a>
+        </p>
+    </div>
+
+    <footer>
+        finalis-core — deterministic finalized-state BFT blockchain<br>
+        Built with C++20, RocksDB, Ed25519, and Sparse Merkle Trees.<br>
+        <span style="font-size: 0.75rem;">⚠️ Mainnet is experimental software – run at your own risk. Participate responsibly.</span>
+    </footer>
+</div>
 </body>
 </html>
