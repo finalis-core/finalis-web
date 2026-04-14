@@ -359,6 +359,49 @@
             margin-top: 1rem;
         }
 
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            background: #ffffff;
+            color: #1a1a1a;
+            border: 1px solid #e0e0db;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 6px;
+            border-bottom: 1px solid #e0e0db;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            background: #f4f4f0;
+            font-weight: 600;
+        }
+
+        .comparison-table td:nth-child(n+2),
+        .comparison-table th:nth-child(n+2) {
+            text-align: center;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .comparison-table {
+                background: #1f1f1f;
+                color: #e0e0e0;
+                border-color: #3a3a3a;
+            }
+            .comparison-table th,
+            .comparison-table td {
+                border-bottom-color: #3a3a3a;
+            }
+            .comparison-table th {
+                background: #262626;
+            }
+        }
+
         .stat {
             background: #e9e9e4;
             border-radius: 8px;
@@ -484,91 +527,91 @@
     <div class="card">
         <h3>🕶️ Confidential UTXO (In Progress)</h3>
         <p>Finalis Core is adding a confidential UTXO extension to hide amounts and recipients while preserving finalized-state validity. This is under active development and currently supports a bounded subset of confidential transactions.</p>
-        <div class="code-block" style="background:#ffffff; color:#1a1a1a; border:1px solid #e0e0db; overflow-x:auto;">
-            <table style="width:100%; border-collapse: collapse; font-size: 0.85rem;">
+        <div class="code-block" style="background: transparent; color: inherit; border: none; overflow-x:auto;">
+            <table class="comparison-table">
                 <thead>
                 <tr>
-                    <th style="text-align:left; padding:6px; border-bottom:1px solid #e0e0db;">Feature</th>
-                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Bitcoin</th>
-                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Monero</th>
-                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Ethereum</th>
-                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Solana</th>
-                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Finalis (mainnet)</th>
-                    <th style="text-align:center; padding:6px; border-bottom:1px solid #e0e0db;">Finalis (confidential branch)</th>
+                    <th>Feature</th>
+                    <th>Bitcoin</th>
+                    <th>Monero</th>
+                    <th>Ethereum</th>
+                    <th>Solana</th>
+                    <th>Finalis (mainnet)</th>
+                    <th>Finalis (confidential branch)</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">BFT finality</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td>BFT finality</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>yes</td>
+                    <td>yes</td>
+                    <td>yes</td>
+                    <td>yes</td>
                 </tr>
                 <tr>
-                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">No live fork choice runtime</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td>No live fork choice runtime</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>yes</td>
+                    <td>yes</td>
                 </tr>
                 <tr>
-                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">UTXO model</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td>UTXO model</td>
+                    <td>yes</td>
+                    <td>yes</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>yes</td>
+                    <td>yes</td>
                 </tr>
                 <tr>
-                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">Confidential-capable txs</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes (bounded subset)</td>
+                    <td>Confidential-capable txs</td>
+                    <td>no</td>
+                    <td>yes</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>yes (bounded subset)</td>
                 </tr>
                 <tr>
-                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">Transparent → Confidential</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">n/a</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td>Transparent → Confidential</td>
+                    <td>no</td>
+                    <td>n/a</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>yes</td>
                 </tr>
                 <tr>
-                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">Confidential → Transparent</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">n/a</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
+                    <td>Confidential → Transparent</td>
+                    <td>no</td>
+                    <td>n/a</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>yes</td>
                 </tr>
                 <tr>
-                    <td style="padding:6px; border-bottom:1px solid #f0f0eb;">Full privacy protocol</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">yes</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">no</td>
-                    <td style="text-align:center; padding:6px; border-bottom:1px solid #f0f0eb;">not yet</td>
+                    <td>Full privacy protocol</td>
+                    <td>no</td>
+                    <td>yes</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>not yet</td>
                 </tr>
                 <tr>
-                    <td style="padding:6px;">No trusted setup</td>
-                    <td style="text-align:center; padding:6px;">yes</td>
-                    <td style="text-align:center; padding:6px;">yes</td>
-                    <td style="text-align:center; padding:6px;">no</td>
-                    <td style="text-align:center; padding:6px;">n/a</td>
-                    <td style="text-align:center; padding:6px;">yes</td>
-                    <td style="text-align:center; padding:6px;">yes</td>
+                    <td>No trusted setup</td>
+                    <td>yes</td>
+                    <td>yes</td>
+                    <td>no</td>
+                    <td>n/a</td>
+                    <td>yes</td>
+                    <td>yes</td>
                 </tr>
                 </tbody>
             </table>
@@ -628,6 +671,15 @@
             <a href="https://github.com/finalis-core/finalis-core/blob/main/docs/MAINNET.md">RPC Methods</a> · 
             <a href="https://github.com/finalis-core/finalis-core#run-a-node">Build Guide</a>
         </p>
+    </div>
+
+    <div class="card">
+        <h3>Community Help Wanted</h3>
+        <p>If you produce a clear, step-by-step installation and launch video (Linux and/or Windows), publish it and post the link here. I will sponsor the best tutorials with sufficient FLS to cover validator registration requirements.</p>
+        <h3 style="margin-top: 1rem;">Bug reports / contributions</h3>
+        <p>Meaningful bugs and contributions will be funded in FLS. This is not a free distribution. Coins are not received in advance; they are earned only through validation rewards on mainnet. Funding comes from those earned coins and follows the live emission schedule.</p>
+        <p>If you contribute, provide reproducible evidence (steps, patch, or video). I will review publicly and settle transparently. Any coin holder can also use their own FLS as they wish. Finalis Core is not created for the personal enrichment of the creator. It is created for finalized state.</p>
+        <p><a href="https://bitcointalk.org/index.php?topic=5578457.0">Bitcointalk thread</a></p>
     </div>
 
     <footer>
