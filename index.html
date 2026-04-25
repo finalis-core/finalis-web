@@ -456,6 +456,39 @@
             margin-top: 1rem;
         }
 
+        .live-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .live-metric {
+            background: #f4f4f0;
+            border: 1px solid #e0e0db;
+            border-radius: 8px;
+            padding: 0.65rem 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .live-metric strong {
+            color: #1a472a;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .live-metric {
+                background: #222;
+                border-color: #3a3a3a;
+            }
+            .live-metric strong {
+                color: #4a9e6f;
+            }
+        }
+
+        .mono {
+            font-family: 'Fira Code', monospace;
+        }
+
         .discord-btn {
             background: #5865F2;
         }
@@ -487,6 +520,23 @@
         <div class="stat"><strong>License:</strong> MIT</div>
         <div class="stat"><strong>Finality:</strong> BFT (⌊2N/3⌋+1)</div>
         <div class="stat"><strong>Supply Cap:</strong> 7,000,000 FLS</div>
+    </div>
+
+    <div class="card">
+        <h3>🌐 Live Network Snapshot</h3>
+        <p class="subtitle">Reads from random public explorer endpoints (no localhost).</p>
+        <div class="config-bar">
+            <span id="live-status-badge" class="status-badge status-offline">checking...</span>
+            <button id="refresh-live-btn" type="button">Refresh</button>
+        </div>
+        <div id="live-error" class="error" style="display:none;"></div>
+        <div class="live-grid">
+            <div class="live-metric"><strong>Endpoint</strong><br><span class="mono" id="live-endpoint">-</span></div>
+            <div class="live-metric"><strong>Height</strong><br><span class="mono" id="live-height">-</span></div>
+            <div class="live-metric"><strong>Transition</strong><br><span class="mono" id="live-transition">-</span></div>
+            <div class="live-metric"><strong>Recent Tx Count</strong><br><span class="mono" id="live-recent-count">-</span></div>
+        </div>
+        <p class="refresh-note">Endpoints: 85.217.171.168 · 64.23.244.126 · 212.58.103.170</p>
     </div>
 
     <div class="grid">
@@ -687,5 +737,98 @@
         Built with C++20, RocksDB, Ed25519, and Sparse Merkle Trees.<br>
     </footer>
 </div>
+<script>
+(() => {
+    const API_ENDPOINTS = [
+        "http://85.217.171.168:18080/api",
+        "http://64.23.244.126:18080/api",
+        "http://212.58.103.170:18080/api"
+    ];
+
+    const badgeEl = document.getElementById("live-status-badge");
+    const endpointEl = document.getElementById("live-endpoint");
+    const heightEl = document.getElementById("live-height");
+    const transitionEl = document.getElementById("live-transition");
+    const recentCountEl = document.getElementById("live-recent-count");
+    const errorEl = document.getElementById("live-error");
+    const refreshBtn = document.getElementById("refresh-live-btn");
+
+    function setStatus(online, text) {
+        badgeEl.className = "status-badge " + (online ? "status-online" : "status-offline");
+        badgeEl.textContent = text;
+    }
+
+    function shortHash(v) {
+        if (typeof v !== "string" || v.length < 16) return "-";
+        return v.slice(0, 12) + "..." + v.slice(-8);
+    }
+
+    function shuffledEndpoints() {
+        const arr = API_ENDPOINTS.slice();
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    async function fetchJson(url, timeoutMs = 5000) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+            const resp = await fetch(url, { signal: controller.signal });
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            return await resp.json();
+        } finally {
+            clearTimeout(timer);
+        }
+    }
+
+    async function loadSnapshot() {
+        errorEl.style.display = "none";
+        setStatus(false, "checking...");
+        const candidates = shuffledEndpoints();
+        let lastErr = "all endpoints failed";
+
+        for (const base of candidates) {
+            endpointEl.textContent = base;
+            try {
+                const status = await fetchJson(base + "/status");
+                let recentCount = "-";
+                try {
+                    const recent = await fetchJson(base + "/recent-tx");
+                    if (Array.isArray(recent)) recentCount = String(recent.length);
+                    else if (recent && Array.isArray(recent.txs)) recentCount = String(recent.txs.length);
+                } catch (_) {}
+
+                const height = status.height ?? status.finalized_height ?? status.tip_height ?? "-";
+                const transition = status.transition_hash ?? status.finalized_hash ?? status.tip_hash ?? "-";
+
+                heightEl.textContent = String(height);
+                transitionEl.textContent = shortHash(String(transition));
+                recentCountEl.textContent = recentCount;
+                setStatus(true, "online");
+                return;
+            } catch (err) {
+                lastErr = err && err.message ? err.message : String(err);
+            }
+        }
+
+        heightEl.textContent = "-";
+        transitionEl.textContent = "-";
+        recentCountEl.textContent = "-";
+        setStatus(false, "offline");
+        errorEl.textContent = "Unable to fetch explorer API data: " + lastErr;
+        errorEl.style.display = "block";
+    }
+
+    refreshBtn.addEventListener("click", () => {
+        loadSnapshot();
+    });
+
+    loadSnapshot();
+    setInterval(loadSnapshot, 30000);
+})();
+</script>
 </body>
 </html>
