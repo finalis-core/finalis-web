@@ -808,8 +808,13 @@
                     else if (recent && Array.isArray(recent.txs)) recentCount = String(recent.txs.length);
                 } catch (_) {}
 
-                const height = status.height ?? status.finalized_height ?? status.tip_height ?? "-";
-                const transition = status.transition_hash ?? status.finalized_hash ?? status.tip_hash ?? "-";
+                const height = status.finalized_height ?? status.height ?? status.tip_height ?? "-";
+                const transition =
+                    status.finalized_transition_hash ??
+                    status.transition_hash ??
+                    status.finalized_hash ??
+                    status.tip_hash ??
+                    "-";
 
                 heightEl.textContent = String(height);
                 transitionEl.textContent = shortHash(String(transition));
