@@ -739,11 +739,14 @@
 </div>
 <script>
 (() => {
-    const API_ENDPOINTS = [
-        "http://85.217.171.168:18080/api",
-        "http://64.23.244.126:18080/api",
-        "http://212.58.103.170:18080/api"
+    const ENDPOINT_HOSTS = [
+        "85.217.171.168",
+        "64.23.244.126",
+        "212.58.103.170"
     ];
+    const PAGE_IS_HTTPS = window.location.protocol === "https:";
+    const API_SCHEME = PAGE_IS_HTTPS ? "https" : "http";
+    const API_ENDPOINTS = ENDPOINT_HOSTS.map((host) => `${API_SCHEME}://${host}:18080/api`);
 
     const badgeEl = document.getElementById("live-status-badge");
     const endpointEl = document.getElementById("live-endpoint");
@@ -790,6 +793,11 @@
         const candidates = shuffledEndpoints();
         let lastErr = "all endpoints failed";
 
+        if (PAGE_IS_HTTPS) {
+            errorEl.textContent = "This page is served over HTTPS. API calls are using HTTPS endpoints on port 18080. If explorer nodes expose only HTTP, browser security will block mixed-content fallback to HTTP.";
+            errorEl.style.display = "block";
+        }
+
         for (const base of candidates) {
             endpointEl.textContent = base;
             try {
@@ -818,7 +826,13 @@
         transitionEl.textContent = "-";
         recentCountEl.textContent = "-";
         setStatus(false, "offline");
-        errorEl.textContent = "Unable to fetch explorer API data: " + lastErr;
+        if (PAGE_IS_HTTPS) {
+            errorEl.textContent = "Unable to fetch explorer API data: " + lastErr +
+                ". If nodes do not provide TLS on :18080, either serve this page over HTTP or put explorer behind an HTTPS reverse proxy with CORS enabled.";
+        } else {
+            errorEl.textContent = "Unable to fetch explorer API data: " + lastErr +
+                ". Check that explorer is listening on 0.0.0.0:18080 and firewall/security groups allow inbound TCP/18080.";
+        }
         errorEl.style.display = "block";
     }
 
