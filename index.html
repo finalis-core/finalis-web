@@ -740,9 +740,13 @@
 <script>
 (() => {
     const ENDPOINT_HOSTS = [
-        "64.23.244.126"
+        "85.217.171.168",
+        "64.23.244.126",
+        "212.58.103.170"
     ];
-    const API_ENDPOINTS = ENDPOINT_HOSTS.map((host) => `https://${host}/api`);
+    const ENDPOINTS = ENDPOINT_HOSTS.map((host) => `https://${host}`);
+    const STATUS_PATHS = ["/api/status", "/status"];
+    const RECENT_TX_PATHS = ["/api/recent-tx", "/recent-tx"];
 
     const badgeEl = document.getElementById("live-status-badge");
     const endpointEl = document.getElementById("live-endpoint");
@@ -763,12 +767,26 @@
     }
 
     function shuffledEndpoints() {
-        const arr = API_ENDPOINTS.slice();
+        const arr = ENDPOINTS.slice();
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [arr[i], arr[j]] = [arr[j], arr[i]];
         }
         return arr;
+    }
+
+    async function fetchFirstOk(base, paths, timeoutMs = 5000) {
+        let lastErr = "all paths failed";
+        for (const path of paths) {
+            const url = base + path;
+            try {
+                const data = await fetchJson(url, timeoutMs);
+                return { data, url };
+            } catch (err) {
+                lastErr = err && err.message ? err.message : String(err);
+            }
+        }
+        throw new Error(lastErr);
     }
 
     async function fetchJson(url, timeoutMs = 5000) {
@@ -792,10 +810,12 @@
         for (const base of candidates) {
             endpointEl.textContent = base;
             try {
-                const status = await fetchJson(base + "/status");
+                const statusRes = await fetchFirstOk(base, STATUS_PATHS);
+                const status = statusRes.data;
                 let recentCount = "-";
                 try {
-                    const recent = await fetchJson(base + "/recent-tx");
+                    const recentRes = await fetchFirstOk(base, RECENT_TX_PATHS);
+                    const recent = recentRes.data;
                     if (Array.isArray(recent)) recentCount = String(recent.length);
                     else if (recent && Array.isArray(recent.txs)) recentCount = String(recent.txs.length);
                 } catch (_) {}
