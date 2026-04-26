@@ -886,6 +886,15 @@
         return v.toLocaleString("en-US");
     }
 
+    function fmtFls(v) {
+        if (typeof v !== "number" || !Number.isFinite(v)) return "-";
+        const sign = v < 0 ? "-" : "";
+        const n = Math.abs(Math.trunc(v));
+        const whole = Math.floor(n / 100000000);
+        const frac = n % 100000000;
+        return sign + whole.toLocaleString("en-US") + "." + String(frac).padStart(8, "0") + " FLS";
+    }
+
     function setVerdict(level, reason) {
         const cls = level === "green" ? "verdict-green" : (level === "red" ? "verdict-red" : "verdict-yellow");
         const label = level === "green" ? "GREEN" : (level === "red" ? "RED" : "YELLOW");
@@ -1015,7 +1024,7 @@
                 epochEl.textContent = epoch !== undefined && epoch !== null ? String(epoch) : "-";
                 heightEl.textContent = String(height);
                 transitionEl.textContent = shortHash(String(transition));
-                reserveEl.textContent = fmtNum(typeof reserve === "number" ? reserve : Number(reserve));
+                reserveEl.textContent = fmtFls(typeof reserve === "number" ? reserve : Number(reserve));
                 ticketPowEl.textContent =
                     ticketDifficulty !== undefined && ticketDifficulty !== null
                         ? String(ticketDifficulty) + (ticketHealth ? " (" + ticketHealth + ")" : "")
@@ -1072,7 +1081,7 @@
                         : (data.summary && typeof data.summary.finalized_balance === "number" ? data.summary.finalized_balance : null);
                     addressCheckResultEl.className = "address-result success";
                     addressCheckResultEl.textContent =
-                        "Address found. Finalized balance: " + (bal === null ? "-" : fmtNum(bal)) + ".";
+                        "Address found. Finalized balance: " + (bal === null ? "-" : fmtFls(bal)) + ".";
                     return;
                 }
                 addressCheckResultEl.className = "address-result error";
@@ -1095,7 +1104,7 @@
     });
 
     loadSnapshot();
-    setInterval(loadSnapshot, 30000);
+    setInterval(loadSnapshot, 90000);
 })();
 </script>
 </body>
