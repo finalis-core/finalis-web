@@ -46,6 +46,29 @@
             footer {
                 border-top-color: #3a3a3a;
             }
+            .config-bar label,
+            .subtitle,
+            .refresh-note,
+            .verdict-reason,
+            .loading {
+                color: #b9b9b9;
+            }
+            .config-bar input,
+            .address-check-row input {
+                background: #151515;
+                color: #f0f0f0;
+                border-color: #3f3f3f;
+            }
+            .success {
+                background: #163024;
+                border-color: #2f5f47;
+                color: #d8f3e2;
+            }
+            .error {
+                background: #3a1b1b;
+                border-color: #6d3a3a;
+                color: #ffd9d9;
+            }
         }
 
         .container {
@@ -423,7 +446,8 @@
             padding: 0.6rem 0.75rem;
             border-radius: 6px;
             border: 1px solid #d0d0ca;
-            background: rgb(14, 3, 3);
+            background: #ffffff;
+            color: #1a1a1a;
             font-family: 'Fira Code', monospace;
             font-size: 0.84rem;
         }
@@ -614,7 +638,7 @@
 
     <div class="card">
         <h3>🌐 Live Network Snapshot</h3>
-        <p class="subtitle">Reads from random public explorer endpoints over HTTPS (no localhost).</p>
+        <p class="subtitle">Reads from public explorer API.</p>
         <div class="config-bar">
             <span id="live-status-badge" class="status-badge status-offline">checking...</span>
             <button id="refresh-live-btn" type="button">Refresh</button>
@@ -625,7 +649,6 @@
         </div>
         <div id="live-error" class="error" style="display:none;"></div>
         <div class="live-grid">
-            <div class="live-metric"><strong>Endpoint</strong><br><span class="mono" id="live-endpoint">-</span></div>
             <div class="live-metric"><strong>Epoch</strong><br><span class="mono" id="live-epoch">-</span></div>
             <div class="live-metric"><strong>Height</strong><br><span class="mono" id="live-height">-</span></div>
             <div class="live-metric"><strong>Transition</strong><br><span class="mono" id="live-transition">-</span></div>
@@ -642,7 +665,6 @@
             </div>
             <div id="address-check-result" class="address-result"></div>
         </div>
-        <p class="refresh-note">HTTPS endpoint: finalis.self-link.com</p>
     </div>
 
     <div class="grid">
@@ -855,7 +877,6 @@
     const ADDRESS_PREFIXES = ["/api/address/", "/api/v1/address/"];
 
     const badgeEl = document.getElementById("live-status-badge");
-    const endpointEl = document.getElementById("live-endpoint");
     const epochEl = document.getElementById("live-epoch");
     const heightEl = document.getElementById("live-height");
     const transitionEl = document.getElementById("live-transition");
@@ -990,7 +1011,6 @@
         let lastErr = "all endpoints failed";
 
         for (const base of candidates) {
-            endpointEl.textContent = base;
             try {
                 const statusRes = await fetchFirstOk(base, STATUS_PATHS);
                 const status = statusRes.data;
