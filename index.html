@@ -536,7 +536,7 @@
             <div class="live-metric"><strong>Transition</strong><br><span class="mono" id="live-transition">-</span></div>
             <div class="live-metric"><strong>Recent Tx Count</strong><br><span class="mono" id="live-recent-count">-</span></div>
         </div>
-        <p class="refresh-note">HTTPS endpoint: self-link.com</p>
+        <p class="refresh-note">HTTPS endpoint: finalis.self-link.com</p>
     </div>
 
     <div class="grid">
@@ -740,11 +740,11 @@
 <script>
 (() => {
     const ENDPOINT_HOSTS = [
-        "finalis.self-link.com"
+        "finalis.finalis.self-link.com"
     ];
     const ENDPOINTS = ENDPOINT_HOSTS.map((host) => `https://${host}`);
-    const STATUS_PATHS = ["/api/status", "/status"];
-    const RECENT_TX_PATHS = ["/api/recent-tx", "/recent-tx"];
+    const STATUS_PATHS = ["/api/status", "/api/v1/status"];
+    const RECENT_TX_PATHS = ["/api/recent-tx", "/api/v1/recent-tx"];
 
     const badgeEl = document.getElementById("live-status-badge");
     const endpointEl = document.getElementById("live-endpoint");
