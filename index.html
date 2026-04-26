@@ -327,6 +327,46 @@
             border: 1px solid #e7b6b6;
         }
 
+        .verdict-wrap {
+            margin-top: 0.75rem;
+            text-align: center;
+        }
+
+        .verdict-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.4rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border: 1px solid transparent;
+        }
+
+        .verdict-green {
+            background: #e6f4ec;
+            color: #1a472a;
+            border-color: #b7dfc6;
+        }
+
+        .verdict-yellow {
+            background: #fff7e6;
+            color: #7a5b14;
+            border-color: #ecd9a5;
+        }
+
+        .verdict-red {
+            background: #fbeaea;
+            color: #7a1f1f;
+            border-color: #e7b6b6;
+        }
+
+        .verdict-reason {
+            margin-top: 0.4rem;
+            font-size: 0.78rem;
+            color: #6a6a6a;
+        }
+
         .loading {
             text-align: center;
             padding: 1rem;
@@ -528,6 +568,10 @@
         <div class="config-bar">
             <span id="live-status-badge" class="status-badge status-offline">checking...</span>
             <button id="refresh-live-btn" type="button">Refresh</button>
+        </div>
+        <div class="verdict-wrap">
+            <span id="health-verdict-badge" class="verdict-badge verdict-yellow">Verdict: checking</span>
+            <div id="health-verdict-reason" class="verdict-reason">Waiting for explorer response…</div>
         </div>
         <div id="live-error" class="error" style="display:none;"></div>
         <div class="live-grid">
@@ -753,6 +797,8 @@
     const recentCountEl = document.getElementById("live-recent-count");
     const errorEl = document.getElementById("live-error");
     const refreshBtn = document.getElementById("refresh-live-btn");
+    const healthVerdictBadgeEl = document.getElementById("health-verdict-badge");
+    const healthVerdictReasonEl = document.getElementById("health-verdict-reason");
 
     function setStatus(online, text) {
         badgeEl.className = "status-badge " + (online ? "status-online" : "status-offline");
@@ -762,6 +808,45 @@
     function shortHash(v) {
         if (typeof v !== "string" || v.length < 16) return "-";
         return v.slice(0, 12) + "..." + v.slice(-8);
+    }
+
+    function setVerdict(level, reason) {
+        const cls = level === "green" ? "verdict-green" : (level === "red" ? "verdict-red" : "verdict-yellow");
+        const label = level === "green" ? "GREEN" : (level === "red" ? "RED" : "YELLOW");
+        healthVerdictBadgeEl.className = "verdict-badge " + cls;
+        healthVerdictBadgeEl.textContent = "Verdict: " + label;
+        healthVerdictReasonEl.textContent = reason;
+    }
+
+    function computeVerdict(status) {
+        const sync = status && status.sync ? status.sync : {};
+        const availability = status && status.availability ? status.availability : {};
+
+        if (sync.bootstrap_sync_incomplete === true) {
+            return { level: "red", reason: "Bootstrap sync incomplete." };
+        }
+        if (sync.peer_height_disagreement === true) {
+            return { level: "red", reason: "Peer height disagreement detected." };
+        }
+        if ((status.established_peer_count ?? 0) === 0 || (status.healthy_peer_count ?? 0) === 0) {
+            return { level: "red", reason: "No healthy established peers." };
+        }
+        if ((sync.finalized_lag ?? 0) > 3) {
+            return { level: "red", reason: "Finalized lag above safe threshold (>3)." };
+        }
+        if (availability.checkpoint_fallback_reason && availability.checkpoint_fallback_reason !== "none") {
+            return { level: "yellow", reason: "Checkpoint fallback active: " + availability.checkpoint_fallback_reason + "." };
+        }
+        if (availability.checkpoint_derivation_mode && availability.checkpoint_derivation_mode !== "normal") {
+            return { level: "yellow", reason: "Checkpoint derivation mode is " + availability.checkpoint_derivation_mode + "." };
+        }
+        if (availability.below_min_eligible === true) {
+            return { level: "yellow", reason: "Eligible operators below minimum threshold." };
+        }
+        if ((sync.finalized_lag ?? 0) > 0) {
+            return { level: "yellow", reason: "Minor finalized lag: " + sync.finalized_lag + "." };
+        }
+        return { level: "green", reason: "Synchronized and healthy (no fallback, no lag)." };
     }
 
     function shuffledEndpoints() {
@@ -810,6 +895,8 @@
             try {
                 const statusRes = await fetchFirstOk(base, STATUS_PATHS);
                 const status = statusRes.data;
+                const verdict = computeVerdict(status);
+                setVerdict(verdict.level, verdict.reason);
                 let recentCount = "-";
                 try {
                     const recentRes = await fetchFirstOk(base, RECENT_TX_PATHS);
@@ -840,6 +927,7 @@
         transitionEl.textContent = "-";
         recentCountEl.textContent = "-";
         setStatus(false, "offline");
+        setVerdict("red", "Explorer status unavailable.");
         errorEl.textContent = "Unable to fetch explorer API data: " + lastErr +
             ". Check nginx HTTPS proxy/certificate and firewall/security groups for inbound TCP/443.";
         errorEl.style.display = "block";
