@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finalis Core — Run a Mainnet Node | Deterministic Finality BFT Blockchain</title>
-    <meta name="description" content="Run a Finalis Core mainnet node. Be part of the first reorg-proof L1 with deterministic finality. Join the genesis era.">
+    <title>Finalis Core — Finalized-State BFT Blockchain (Pre-launch)</title>
+    <meta name="description" content="Finalis Core is a finalized-state BFT blockchain with confidential UTXOs from genesis. Mainnet has not launched yet: run a testnet node and help review the protocol.">
     
     <!-- Open Graph / Social Media -->
-    <meta property="og:title" content="Finalis Core — Run a Mainnet Node">
-    <meta property="og:description" content="Deterministic finalized-state BFT blockchain. No forks. Mainnet live. Run the node.">
+    <meta property="og:title" content="Finalis Core — Finalized-State BFT Blockchain">
+    <meta property="og:description" content="Deterministic finalized-state BFT blockchain. No fork choice. Pre-launch: public testnet running, review wanted.">
     <meta property="og:url" content="https://finalis-core.github.io/finalis-web/">
     <meta property="og:image" content="https://finalis-core.github.io/finalis-web/og-image.png">
     <meta property="og:type" content="website">
@@ -620,16 +620,16 @@
 <body>
 <div class="container">
     <div class="hero">
-        <h1>Run a Finalis Mainnet Node</h1>
-        <p>Deterministic finality. No forks. Mainnet is live. Join the genesis era.</p>
-        <a href="#quick-start" class="button">🚀 Start Your Node →</a>
+        <h1>Finalis Core</h1>
+        <p>A finalized-state BFT blockchain. No fork choice. Confidential UTXOs from genesis.</p>
+        <a href="#quick-start" class="button">🚀 Run a Testnet Node →</a>
         <a href="https://discord.gg/8rKfKc7QR9" class="button button-outline" style="background:#5865F2; border:none; color:white;">💬 Join Discord</a>
-        <a href="https://github.com/FinalisCore/finalis-core/releases/tag/v1.1.1" class="button" style="background:#0865F2; border:none; color:white;">Download Finalis Core</a>
+        <a href="https://github.com/FinalisCore/finalis-core" class="button" style="background:#0865F2; border:none; color:white;">View Source on GitHub</a>
     </div>
 
     <div class="incentive-banner">
-        🏆 Mainnet Rewards: Run a validator node and earn block rewards. Be an early mainnet participant.
-        <a href="#quick-start">Get started →</a>
+        🚧 Status: pre-launch. Mainnet has not launched and genesis is not frozen yet. A public testnet is running (testnet coins have no value).
+        <a href="https://github.com/FinalisCore/finalis-core/blob/main/mainnet/MAINNET_PLAN.md">Mainnet plan →</a>
     </div>
 
     <div class="stats">
@@ -640,8 +640,8 @@
     </div>
 
     <div class="card">
-        <h3>🌐 Live Network Snapshot</h3>
-        <p class="subtitle">Reads from public explorer API.</p>
+        <h3>🌐 Explorer Snapshot</h3>
+        <p class="subtitle">Reads from a public explorer API. Mainnet has not launched, so this is not mainnet data.</p>
         <div class="config-bar">
             <span id="live-status-badge" class="status-badge status-offline">checking...</span>
             <button id="refresh-live-btn" type="button">Refresh</button>
@@ -663,7 +663,7 @@
         <div class="address-check">
             <h4>Address Validation (Finalized State)</h4>
             <div class="address-check-row">
-                <input id="address-input" type="text" placeholder="Enter address (sc1... / tsc1...)" />
+                <input id="address-input" type="text" placeholder="Enter address (tsc1... on testnet)" />
                 <button id="address-check-btn" type="button">Validate Address</button>
             </div>
             <div id="address-check-result" class="address-result"></div>
@@ -672,17 +672,17 @@
 
     <div class="grid">
         <div class="card">
-            <h3>🏆 Why Run a Mainnet Node?</h3>
+            <h3>🧪 Why Run a Testnet Node?</h3>
             <ul>
-                <li>Earn block rewards in FLS</li>
-                <li>Help secure deterministic-finality consensus</li>
-                <li>Be an early validator</li>
-                <li>Participate in BFT consensus from day one</li>
+                <li>Rehearse mainnet: same consensus and economic parameters</li>
+                <li>Find bugs before genesis is frozen</li>
+                <li>Join as a testnet validator (funded with testnet FLS)</li>
+                <li>Help with the consensus and cryptography review</li>
             </ul>
         </div>
         <div class="card">
             <h3>⚡ Deterministic Finality</h3>
-            <p>No fork choice. The node processes only <code>height = finalized_height + 1</code>. Every block is final.</p>
+            <p>No live fork choice. The node processes only <code>height = finalized_height + 1</code>. Blocks finalize with <code>⌊2N/3⌋+1</code> signatures bound to <code>(height, round, block_id)</code>.</p>
         </div>
         <div class="card">
             <h3>🔄 Adaptive Committee</h3>
@@ -693,7 +693,7 @@
     <div class="grid">
         <div class="card">
             <h3>📦 UTXO Ledger</h3>
-            <p>Simple, auditable UTXO model with P2PKH addresses. Ed25519 signatures. Deterministic reward settlement.</p>
+            <p>UTXO model with P2PKH addresses and Ed25519 signatures. Two transaction formats, both valid from genesis: <code>Tx</code> (transparent) and <code>TxV2</code> (confidential-capable).</p>
         </div>
         <div class="card">
             <h3>📡 Light Client Support</h3>
@@ -701,13 +701,14 @@
         </div>
         <div class="card">
             <h3>🔐 Address Format</h3>
-            <p>Ed25519 keys → HASH160(pubkey) → Bech32 encoding. HRP: <code>sc</code> (mainnet) / <code>tsc</code> (testnet).</p>
+            <p>Ed25519 keys → HASH160(pubkey) → Bech32-like encoding (not standard SegWit Bech32) with a 4-byte SHA256d checksum. HRP: <code>sc</code> (mainnet) / <code>tsc</code> (testnet).</p>
         </div>
     </div>
 
     <div class="card">
-        <h3>🕶️ Confidential UTXO (Mainnet, bounded subset)</h3>
-        <p>Finalis Core includes a confidential UTXO extension that hides amounts and recipients while preserving finalized-state validity. Mainnet supports a bounded subset of confidential transactions, and the full privacy protocol is still in progress.</p>
+        <h3>🕶️ Confidential UTXOs (enabled from genesis)</h3>
+        <p>Confidential outputs hide their amount (Pedersen commitment + range proof, no trusted setup) and pay a one-time key instead of an address. The wallet supports shield (transparent → confidential), confidential → confidential, and unshield (confidential → transparent).</p>
+        <p>Amounts are private only in confidential → confidential transfers; shield and unshield amounts can be computed from their public parts. The transaction graph, fees and the total confidential supply are always public. There is no sender anonymity.</p>
         <div class="code-block" style="background: transparent; color: inherit; border: none; overflow-x:auto;">
             <table class="comparison-table">
                 <thead>
@@ -717,8 +718,7 @@
                     <th>Monero</th>
                     <th>Ethereum</th>
                     <th>Solana</th>
-                    <th>Finalis (mainnet)</th>
-                    <th>Finalis (confidential branch)</th>
+                    <th>Finalis</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -726,7 +726,6 @@
                     <td>BFT finality</td>
                     <td>no</td>
                     <td>no</td>
-                    <td>yes</td>
                     <td>yes</td>
                     <td>yes</td>
                     <td>yes</td>
@@ -738,7 +737,6 @@
                     <td>no</td>
                     <td>no</td>
                     <td>yes</td>
-                    <td>yes</td>
                 </tr>
                 <tr>
                     <td>UTXO model</td>
@@ -747,51 +745,45 @@
                     <td>no</td>
                     <td>no</td>
                     <td>yes</td>
+                </tr>
+                <tr>
+                    <td>Confidential amounts</td>
+                    <td>no</td>
+                    <td>yes</td>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>yes (confidential → confidential)</td>
+                </tr>
+                <tr>
+                    <td>One-time recipient keys</td>
+                    <td>no</td>
+                    <td>yes</td>
+                    <td>no</td>
+                    <td>no</td>
                     <td>yes</td>
                 </tr>
                 <tr>
-                    <td>Confidential-capable txs</td>
-                    <td>no</td>
-                    <td>yes</td>
-                    <td>no</td>
-                    <td>no</td>
-                    <td>yes (bounded subset)</td>
-                    <td>yes (bounded subset)</td>
-                </tr>
-                <tr>
-                    <td>Transparent → Confidential</td>
+                    <td>Transparent ↔ confidential</td>
                     <td>no</td>
                     <td>n/a</td>
                     <td>no</td>
                     <td>no</td>
                     <td>yes</td>
-                    <td>yes</td>
                 </tr>
                 <tr>
-                    <td>Confidential → Transparent</td>
-                    <td>no</td>
-                    <td>n/a</td>
-                    <td>no</td>
-                    <td>no</td>
-                    <td>yes</td>
-                    <td>yes</td>
-                </tr>
-                <tr>
-                    <td>Full privacy protocol</td>
+                    <td>Sender anonymity</td>
                     <td>no</td>
                     <td>yes</td>
                     <td>no</td>
                     <td>no</td>
                     <td>no</td>
-                    <td>not yet</td>
                 </tr>
                 <tr>
                     <td>No trusted setup</td>
                     <td>yes</td>
                     <td>yes</td>
-                    <td>no</td>
                     <td>n/a</td>
-                    <td>yes</td>
+                    <td>n/a</td>
                     <td>yes</td>
                 </tr>
                 </tbody>
@@ -801,19 +793,27 @@
     </div>
 
     <div class="card" id="quick-start">
-        <h3>🚀 Quick Start (Linux)</h3>
+        <h3>🚀 Quick Start: Testnet Node (Linux)</h3>
+        <p>Mainnet has not launched. Until it does, run a node on the public testnet.</p>
         <div class="code-block">
+            # Dependencies (Debian/Ubuntu)<br>
+            sudo apt install -y build-essential cmake ninja-build pkg-config git libssl-dev \<br>
+            &nbsp;&nbsp;qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools \<br>
+            &nbsp;&nbsp;libsodium-dev librocksdb-dev nlohmann-json3-dev curl jq<br><br>
             # Clone and build<br>
-            git clone https://github.com/FinalisCore/finalis-core<br>
+            git clone https://github.com/FinalisCore/finalis-core.git<br>
             cd finalis-core<br>
             cmake -S . -B build -G Ninja &amp;&amp; cmake --build build -j<br><br>
-            # Run your mainnet node<br>
-            ./scripts/start.sh
+            # Run a testnet node with a local lightserver (finds the seeds by itself)<br>
+            ./build/finalis-node --testnet --listen --with-lightserver<br><br>
+            # Check it<br>
+            ./build/finalis-cli --testnet rpc_status
         </div>
-        <p style="margin-top: 0.75rem; font-size: 0.85rem;">Default ports: P2P <code>19440</code> · Lightserver <code>19444</code></p>
+        <p style="margin-top: 0.75rem; font-size: 0.85rem;">Default ports: testnet P2P <code>19540</code> · Lightserver <code>19544</code> &nbsp;|&nbsp; mainnet (after launch) P2P <code>19440</code> · Lightserver <code>19444</code></p>
+        <p style="font-size: 0.85rem;">Joining as a testnet validator: see the <a href="https://github.com/FinalisCore/finalis-core/blob/main/testnet/README.md">testnet guide</a>. Never reuse a testnet validator key on mainnet.</p>
         <hr>
-        <h3>🚀 Quick Start (Windows)</h3>
-        <p>Download the latest installer from <a href="https://github.com/FinalisCore/finalis-core/releases/tag/v1.1.1">GitHub Releases</a>, install it, launch the node and lightserver, then verify identity with <code>get_status</code>.</p>
+        <h3>🚀 Windows</h3>
+        <p>Check <a href="https://github.com/FinalisCore/finalis-core/releases">GitHub Releases</a> for current builds. Older releases were built for a development network that has been retired, so always confirm <code>network_name</code> and <code>genesis_hash</code> with <code>get_status</code> before relying on a node.</p>
     </div>
     
     <iframe src="https://www.youtube-nocookie.com/embed/WpUGOQZvsHs?start=29" title="Finalis Core video" style="display:block;width:100%;max-width:560px;aspect-ratio:16/9;height:auto;border:0;margin:1rem auto;" allow="encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>
@@ -825,7 +825,7 @@
         </div>
         <div class="card">
             <h3>📁 Repository Components</h3>
-            <p><code>finalis-node</code> · <code>finalis-lightserver</code> · <code>finalis-explorer</code> · <code>finalis-wallet</code> · Formal TLA+ models · Attack simulations</p>
+            <p><code>finalis-node</code> · <code>finalis-lightserver</code> · <code>finalis-explorer</code> · <code>finalis-wallet</code> · <code>finalis-cli</code> · Formal TLA+ models · Attack simulations · Python conformance tests</p>
         </div>
         <div class="card">
             <h3>💬 Get Involved</h3>
@@ -834,7 +834,7 @@
                 <a href="https://x.com/finalis_core" class="button twitter-btn" style="background:#1DA1F2;">Follow on X</a>
                 <a href="https://github.com/FinalisCore/finalis-core" class="button github-btn" style="background:#333;">GitHub</a>
             </div>
-            <p style="margin-top: 0.75rem;">Questions? Bugs? Reach out – we're building in public on mainnet.</p>
+            <p style="margin-top: 0.75rem;">Questions? Bugs? Reach out – we're building in public toward mainnet. Report security issues privately per <a href="https://github.com/FinalisCore/finalis-core/blob/main/SECURITY.md">SECURITY.md</a>.</p>
         </div>
     </div>
 
@@ -845,13 +845,20 @@
             <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/LIVE_PROTOCOL.md">Live Protocol Spec</a> · 
             <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/spec/CHECKPOINT_DERIVATION_SPEC.md">Checkpoint Derivation</a> · 
             <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/integrations/EXCHANGE_INTEGRATION.md">Exchange Integration</a> · 
-            <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/ADDRESSES.md">Address Format</a>
+            <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/ADDRESSES.md">Address Format</a> · 
+            <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/spec/CONFIDENTIAL_UTXO_SPEC.md">Confidential UTXO Spec</a> · 
+            <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/ECONOMICS.md">Economics</a>
         </p>
+        <hr>
+        <h3>🔍 Review Wanted</h3>
+        <p>We are looking for independent review of the consensus safety rules and the confidential transaction cryptography. Start with the <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/REVIEWING.md">reviewer guide</a>, and report vulnerabilities privately as described in <a href="https://github.com/FinalisCore/finalis-core/blob/main/SECURITY.md">SECURITY.md</a>.</p>
         <hr>
         <h3>🔗 Resources</h3>
         <p>
             <a href="https://github.com/FinalisCore/finalis-core">GitHub Repository</a> · 
-            <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/MAINNET.md">RPC Methods</a> · 
+            <a href="https://github.com/FinalisCore/finalis-core/blob/main/testnet/README.md">Testnet Guide</a> · 
+            <a href="https://github.com/FinalisCore/finalis-core/blob/main/mainnet/MAINNET_PLAN.md">Mainnet Plan</a> · 
+            <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/MAINNET.md">Mainnet Reference (RPC)</a> · 
             <a href="https://github.com/FinalisCore/finalis-core#run-a-node">Build Guide</a>
         </p>
     </div>
@@ -860,7 +867,7 @@
         <h3>Community Help Wanted</h3>
         <p>If you produce a clear, step-by-step installation and launch video (Linux and/or Windows), publish it and post the link here. I will sponsor the best tutorials with sufficient FLS to cover validator registration requirements.</p>
         <h3 style="margin-top: 1rem;">Bug reports / contributions</h3>
-        <p>Meaningful bugs and contributions will be funded in FLS. This is not a free distribution. Coins are not received in advance; they are earned only through validation rewards on mainnet. Funding comes from those earned coins and follows the live emission schedule.</p>
+        <p>Meaningful bugs and contributions will be funded in FLS. This is not a free distribution. Coins are not received in advance; they will be earned only through validation rewards once mainnet launches. Funding comes from those earned coins and follows the live emission schedule.</p>
         <p>If you contribute, provide reproducible evidence (steps, patch, or video). I will review publicly and settle transparently. Any coin holder can also use their own FLS as they wish. Finalis Core is not created for the personal enrichment of the creator. It is created for finalized state.</p>
         <p><a href="https://bitcointalk.org/index.php?topic=5578457.0">Bitcointalk thread</a></p>
     </div>
@@ -1076,7 +1083,7 @@
         setStatus(false, "offline");
         setVerdict("red", "Explorer status unavailable.");
         errorEl.textContent = "Unable to fetch explorer API data: " + lastErr +
-            ". Check nginx HTTPS proxy/certificate and firewall/security groups for inbound TCP/443.";
+            ". The public explorer may be offline while the network is being relaunched.";
         errorEl.style.display = "block";
     }
 
