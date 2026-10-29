@@ -647,7 +647,7 @@
 
     <div class="card">
         <h3>🌐 Testnet Snapshot</h3>
-        <p class="subtitle">Live data from the testnet-3 explorer (finalis.self-link.com). Mainnet has not launched, so this is not mainnet data.</p>
+        <p class="subtitle">Live data from the testnet-3 explorers (finalis.self-link.com and 159.200.236.114, with automatic failover). Mainnet has not launched, so this is not mainnet data.</p>
         <div class="config-bar">
             <span id="live-status-badge" class="status-badge status-offline">checking...</span>
             <button id="refresh-live-btn" type="button">Refresh</button>
@@ -902,7 +902,8 @@
 <script>
 (() => {
     const ENDPOINT_HOSTS = [
-        "finalis.self-link.com"
+        "finalis.self-link.com",
+        "159.200.236.114"
     ];
     const ENDPOINTS = ENDPOINT_HOSTS.map((host) => `https://${host}`);
     const STATUS_PATHS = ["/api/status", "/api/v1/status"];
