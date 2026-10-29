@@ -632,7 +632,7 @@
     </div>
 
     <div class="incentive-banner">
-        🚧 Status: pre-launch. Mainnet has not launched and its genesis is not frozen. The public testnet, <strong>testnet-1</strong>, has been running since 19 October 2026 (testnet coins have no value). It has one validator today; I am looking for operators to bring it to four.
+        🚧 Status: pre-launch. Mainnet has not launched and its genesis is not frozen. The public testnet, <strong>testnet-3</strong>, started on 29 October 2026 at 06:00 UTC and replaces testnet-2 (testnet coins have no value). It has one validator today; I am looking for operators to bring it to four. Running a testnet-2 node? <a href="https://github.com/FinalisCore/finalis-core/blob/main/testnet/README.md#genesis-testnet-3">Move it to testnet-3 →</a>
         <a href="https://github.com/FinalisCore/finalis-core/blob/main/testnet/JOIN.md">Join the testnet →</a> · <a href="https://github.com/FinalisCore/finalis-core/blob/main/mainnet/MAINNET_PLAN.md">Mainnet plan →</a>
     </div>
 
@@ -647,7 +647,7 @@
 
     <div class="card">
         <h3>🌐 Testnet Snapshot</h3>
-        <p class="subtitle">Live data from the testnet-1 explorer (finalis.self-link.com). Mainnet has not launched, so this is not mainnet data.</p>
+        <p class="subtitle">Live data from the testnet-3 explorer (finalis.self-link.com). Mainnet has not launched, so this is not mainnet data.</p>
         <div class="config-bar">
             <span id="live-status-badge" class="status-badge status-offline">checking...</span>
             <button id="refresh-live-btn" type="button">Refresh</button>
@@ -682,7 +682,7 @@
             <ul>
                 <li>Rehearse mainnet: same consensus and economic parameters</li>
                 <li>Find bugs before genesis is frozen</li>
-                <li>Become a testnet validator: I send the bond in testnet FLS</li>
+                <li>Become a testnet validator: the faucet sends the bond in testnet FLS</li>
                 <li>Help with the consensus and cryptography review</li>
                 <li><a href="https://github.com/FinalisCore/finalis-core/blob/main/testnet/JOIN.md">Step-by-step guide (about 30 minutes)</a></li>
             </ul>
@@ -707,6 +707,10 @@
             <p>The wallet does not take a server's word for its balance. It starts from the genesis built into it, follows each validator committee, and checks every coin against the validators' signatures. It asks several servers: none can invent a coin, and one honest server is enough to reveal a hidden one. <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/spec/LIGHT_CLIENT.md">How it works →</a></p>
         </div>
         <div class="card">
+            <h3>⏳ Time-Locked Transactions</h3>
+            <p>Send a transaction sealed until a chosen block height: nobody can read or execute it earlier. Validators sign each height once it is final, and those signatures open it (BLS12-381 signature-based witness encryption). Sealed data can be revealed the same way, for example sealed bids. A small bond is forfeited if the sealed body is invalid, and a validator that signs a height early is slashed. Height-locked coins cover vesting and inheritance. <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/CONSENSUS.md#timed-transactions">Design →</a></p>
+        </div>
+        <div class="card">
             <h3>🔐 Address Format</h3>
             <p>Ed25519 keys → HASH160(pubkey) → Bech32-like encoding (not standard SegWit Bech32) with a 4-byte SHA256d checksum. HRP: <code>sc</code> (mainnet) / <code>tsc</code> (testnet).</p>
         </div>
@@ -717,9 +721,10 @@
         <p>Who holds the coins decides whether a chain can be trusted, so these rules are fixed in the code and the published launch plan, where anyone can check them:</p>
         <ul>
             <li><strong>No premine and no sale.</strong> Genesis creates zero coins. Every FLS, including mine, is earned as a validation reward under the public emission schedule.</li>
-            <li><strong>Genesis validator slots are drawn, not chosen.</strong> Submitted keys are ranked by a Bitcoin block hash mined after submissions close, which nobody, including me, can know in advance. <a href="https://github.com/FinalisCore/finalis-core/blob/main/mainnet/GENESIS_VALIDATOR_CEREMONY.md">Ceremony →</a></li>
-            <li><strong>I cannot control consensus.</strong> At most <code>⌊(N−1)/3⌋</code> of the <code>N</code> genesis slots can be mine, so the other validators always form a quorum without me.</li>
-            <li><strong>No treasury wallet.</strong> The 10% reserve is protocol state, released by fixed rules after the supply cap; no person holds its keys. <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/ECONOMICS.md">Economics →</a></li>
+            <li><strong>One bootstrap validator, then open joining.</strong> Mainnet starts the way the testnet did: genesis names one validator, mine, and everyone else joins through the same on-chain registration. There is no ceremony and there are no reserved or promised slots. <a href="https://github.com/FinalisCore/finalis-core/blob/main/mainnet/MAINNET_PLAN.md#launch-model">Launch model →</a></li>
+            <li><strong>Public faucet rules.</strong> The faucet pays bonds out of the bootstrap validator's rewards: the first 128 grants only, one per Discord account and per address, strictly in request order. The queue and every payment are public.</li>
+            <li><strong>My control ends as validators join.</strong> While mine is the only validator it finalizes every block and earns all emission, in public. With 2 validators I can no longer finalize alone, and from 4 independent validators the chain keeps going while my node is down. I run one validator, never more.</li>
+            <li><strong>No treasury wallet.</strong> The reserve is protocol state, filled and paid out by fixed rules; no person holds its keys. <a href="https://github.com/FinalisCore/finalis-core/blob/main/docs/ECONOMICS.md">Economics →</a></li>
             <li><strong>Everything is reproducible.</strong> Code, genesis files and release builds are public under the MIT license; anyone can rebuild them and check the published hashes.</li>
         </ul>
     </div>
@@ -822,6 +827,7 @@
             sudo journalctl -u finalis-testnet -f
         </div>
         <p style="margin-top: 0.75rem; font-size: 0.85rem;">Default ports: testnet P2P <code>19540</code> · Lightserver <code>19544</code> &nbsp;|&nbsp; mainnet (after launch) P2P <code>19440</code> · Lightserver <code>19444</code></p>
+        <p style="font-size: 0.85rem;">Check you are on testnet-3: <code>get_status</code> shows a <code>genesis_hash</code> starting with <code>f68c3097</code>. Prebuilt packages (x86_64 and ARM64) and Docker are also covered in the joining guide.</p>
         <p style="font-size: 0.85rem;">Becoming a testnet validator, opening ports, troubleshooting: the <a href="https://github.com/FinalisCore/finalis-core/blob/main/testnet/JOIN.md">joining guide</a>. Never reuse a testnet validator key on mainnet.</p>
         <hr>
         <h3>🚀 Windows</h3>
@@ -833,7 +839,7 @@
     <div class="grid">
         <div class="card">
             <h3>📊 Economic Model</h3>
-            <p>12-year emission schedule with 20% annual decay. 10% reserve accrual during emission era. Zero new issuance after 7M cap. Post-cap fee pooling with reserve subsidy support.</p>
+            <p>Fixed supply of 7,000,000 FLS. 12-year emission schedule with 20% annual decay; 30% of emission is saved into a protocol reserve. Fees are pooled per epoch from block 1: half to that epoch's validators, half to the reserve. Slashed bonds return to the reserve. After emission ends, the reserve pays validators 5% of its balance a year, so it never runs dry. The base fee is zero while blocks are less than half full and rises only under congestion.</p>
         </div>
         <div class="card">
             <h3>📁 Repository Components</h3>
