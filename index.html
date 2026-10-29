@@ -684,7 +684,7 @@
                 <li>Find bugs before genesis is frozen</li>
                 <li>Become a testnet validator: the faucet sends the bond in testnet FLS</li>
                 <li>Help with the consensus and cryptography review</li>
-                <li><a href="https://github.com/FinalisCore/finalis-core/blob/main/testnet/JOIN.md">Step-by-step guide (about 30 minutes)</a></li>
+                <li><a href="https://github.com/FinalisCore/finalis-core/blob/main/testnet/JOIN.md">Step-by-step guide (about 5 minutes with a prebuilt package or Docker)</a></li>
             </ul>
         </div>
         <div class="card">
@@ -1057,6 +1057,7 @@
                     const recentRes = await fetchFirstOk(base, RECENT_TX_PATHS);
                     const recent = recentRes.data;
                     if (Array.isArray(recent)) recentCount = String(recent.length);
+                    else if (recent && Array.isArray(recent.items)) recentCount = String(recent.items.length);
                     else if (recent && Array.isArray(recent.txs)) recentCount = String(recent.txs.length);
                 } catch (_) {}
 
